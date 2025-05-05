@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="843.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ManagerController">
+  <tabs>
+    <Tab text="Vehicle Management">
+         <content>
+            <FlowPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="552.0" prefWidth="394.0">
+                     <children>
+                        <Label fx:id="tableLabel" text="Label" />
+                        <TableView fx:id="table" prefHeight="536.0" prefWidth="394.0">
+                          <columns>
+                            <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
+                            <TableColumn fx:id="modelColumn" prefWidth="75.0" text="Model" />
+                              <TableColumn fx:id="brandColumn" prefWidth="75.0" text="Brand" />
+                              <TableColumn fx:id="assignmentColumn" prefWidth="75.0" text="Assignment" />
+                              <TableColumn fx:id="propertyColumn" prefWidth="90.4000244140625" text="Property Type" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </children>
+            </FlowPane>
+         </content>
+    </Tab>
+    <Tab text="Reporting">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+      </content>
+    </Tab>
+      <Tab text="Future Cost Estimation">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        </content>
+      </Tab>
+  </tabs>
+</TabPane>

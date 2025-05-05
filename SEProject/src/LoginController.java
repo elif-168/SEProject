@@ -1,7 +1,18 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Objects;
 
 public class LoginController {
 
@@ -9,43 +20,37 @@ public class LoginController {
         DBConnection.initializeDB();
     }
 
+    @FXML
+    private TextField empID;
+    @FXML
+    private PasswordField empPass;
+    @FXML
+    private Label warningLabel;
 
 
     @FXML
-    private void login(ActionEvent event) {
+    private void loginPressed(ActionEvent event) {
         // TODO: Handle login logic here
         System.out.println("Login button clicked");
 
+        String userID = empID.getText();
+        String password = empPass.getText();
+
         ResultSet resultSet;
-        try (Statement statement = DBConnection.getConnection().createStatement()) {
+        try (PreparedStatement statement = DBConnection.getConnection().prepareStatement("SELECT * FROM emp_login WHERE emp_id = ? AND emp_password = ?")) {
 
-            resultSet = statement.executeQuery("select * from emp_login");
+            statement.setString(1, userID);
+            statement.setString(2, password);
+            resultSet = statement.executeQuery();
 
-
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            System.out.println("Table structure:");
-            for (int i = 1; i <= columnCount; i++) {
-                System.out.printf("%-20s", metaData.getColumnName(i));
-            }
-            System.out.println();
-
-            boolean hasResults = false;
-            while (resultSet.next()) {
-                hasResults = true;
-                for (int i = 1; i <= columnCount; i++) {
-                    System.out.printf("%-20s", resultSet.getString(i));
-                }
-                System.out.println();
-            }
-
-            if (!hasResults) {
-                System.out.println("No records found in emp_login table");
-            }
-
-            while (resultSet.next()) {
-                System.out.println("*****");
-                System.out.println(resultSet.getString("emp_password"));
+            if(resultSet.next()){
+                System.out.println("Login successful");
+                Node n = (Node) event.getSource();
+                Stage stage = (Stage) n.getScene().getWindow();
+                stage.close();
+                goToNextStage();
+            }else{
+                warningLabel.setText("ID or password wrong! Please try again");
             }
 
 
@@ -58,5 +63,19 @@ public class LoginController {
     private void continueWithoutAccount(ActionEvent event) {
         // TODO: Handle continue without account logic here
         System.out.println("Continue without account clicked");
+    }
+
+    private void goToNextStage(){
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ManagerView.fxml")));
+            Stage stage = new Stage();
+            stage.setTitle("Vehicle Fleet Management System");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
