@@ -28,4 +28,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-/javafx-sdk-21.0.7/
+/javafx-sdk*/
