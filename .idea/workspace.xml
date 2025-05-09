@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e4740751-5eb1-44ea-8a7c-598624bf260e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/SEProject/SEProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/SEProject.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx-swt.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx-swt.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.base.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.base.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.controls.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.controls.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.fxml.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.fxml.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.graphics.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.graphics.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.media.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.media.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.swing.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.swing.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.web.jar" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib/javafx.web.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/src.zip" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/src.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SEProject/src/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/SEProject/src/App.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2wfSRLTbafYqjUwFIk1xPu8aoph" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.App.executor": "Run",
+    "JAR Application.jdbc-api-1.4.jar.executor": "Run",
+    "JAR Application.mysql-connector-j-9.3.0.jar.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/biloger/Documents/Development/Learning/VERİTABANI SİSTEMLERİ GÜNCEL KONULAR/database-seçmeli/SEProject",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/SEProject/database" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.App">
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="App" />
+      <module name="SEProject" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;$PROJECT_DIR$/SEProject/javafx-sdk-21.0.7/lib&quot; --add-modules javafx.controls,javafx.fxml -Djava.library.path=&quot;./javafx-sdk-21.0.7/bin&quot; -Dprism.order=es2 -Dprism.verbose=true" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="jdbc-api-1.4.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/SEProject/lib/jdbc-api-1.4.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mysql-connector-j-9.3.0.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/SEProject/lib/mysql-connector-j-9.3.0.jar" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.App" />
+      <item itemvalue="JAR Application.jdbc-api-1.4.jar" />
+      <item itemvalue="JAR Application.mysql-connector-j-9.3.0.jar" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.App" />
+        <item itemvalue="JAR Application.mysql-connector-j-9.3.0.jar" />
+        <item itemvalue="JAR Application.jdbc-api-1.4.jar" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e4740751-5eb1-44ea-8a7c-598624bf260e" name="Changes" comment="" />
+      <created>1746431126372</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746431126372</updated>
+      <workItem from="1746431127726" duration="6155000" />
+      <workItem from="1746603077199" duration="557000" />
+      <workItem from="1746603918362" duration="50000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/SEProject/src/App.java</url>
+          <line>12</line>
+          <properties class="App" method="main">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
