@@ -1,66 +1,129 @@
 package aracyonetim.controller;
 
-import aracyonetim.db.DBConnection;
+import aracyonetim.dao.AracDAO;
 import aracyonetim.model.Arac;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.time.LocalDate;
+import java.util.List;
 
 public class ManagerController {
 
-    //aracyonetim.model.Vehicle property type 0 == > bizim uygulamadan kiralik, 1 ==> kendi araclari
+    @FXML private TableView<Arac> aracTableView;
+    @FXML private TableColumn<Arac, String> plakaColumn;
+    @FXML private TableColumn<Arac, String> markaColumn;
+    @FXML private TableColumn<Arac, String> modelColumn;
+    @FXML private TableColumn<Arac, Integer> yilColumn;
+    @FXML private TableColumn<Arac, Integer> kmColumn;
+    @FXML private TableColumn<Arac, Boolean> kiralikColumn;
 
-    @FXML
-    private TableView<Arac> table = new TableView<>();
+    @FXML private TextField plakaField;
+    @FXML private TextField markaField;
+    @FXML private TextField modelField;
+    @FXML private TextField yilField;
+    @FXML private TextField kmField;
 
-    public ManagerController() {
+    private AracDAO aracDAO;
 
+    public void initialize() {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:veritabani.db");
+            aracDAO = new AracDAO(conn);
+            setupTableColumns();
+            araclariYukle();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Veritabanı bağlantı hatası.");
+        }
     }
 
-    @FXML private TableColumn<Arac, Number> idColumn;
-    @FXML private TableColumn<Arac, String> modelColumn;
-    @FXML private TableColumn<Arac, String> brandColumn;
-    @FXML private TableColumn<Arac, String> assignmentColumn;
-    @FXML private TableColumn<Arac, String> propertyColumn;
+    private void setupTableColumns() {
+        plakaColumn.setCellValueFactory(new PropertyValueFactory<>("plaka"));
+        markaColumn.setCellValueFactory(new PropertyValueFactory<>("marka"));
+        modelColumn.setCellValueFactory(new PropertyValueFactory<>("model"));
+        yilColumn.setCellValueFactory(new PropertyValueFactory<>("yil"));
+        kmColumn.setCellValueFactory(new PropertyValueFactory<>("km"));
+        kiralikColumn.setCellValueFactory(new PropertyValueFactory<>("kiralik"));
+    }
+
+    private void araclariYukle() {
+        try {
+            List<Arac> aracList = aracDAO.tumAktifAraclariGetir();
+            aracTableView.getItems().setAll(aracList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Araçlar yüklenemedi.");
+        }
+    }
 
     @FXML
-    public void initialize() {
-        idColumn.setCellValueFactory(data -> data.getValue().idProperty());
-        modelColumn.setCellValueFactory(data -> data.getValue().modelProperty());
-        brandColumn.setCellValueFactory(data -> data.getValue().brandProperty());
-        assignmentColumn.setCellValueFactory(data-> data.getValue().isAssignedProperty());
-        propertyColumn.setCellValueFactory(data -> data.getValue().propertyTypeProperty());
+    private void aracEkle() {
+        try {
+            String plaka = plakaField.getText();
+            String marka = markaField.getText();
+            String model = modelField.getText();
+            int yil = Integer.parseInt(yilField.getText());
+            int km = Integer.parseInt(kmField.getText());
 
-        ObservableList<Arac> aracs = FXCollections.observableArrayList();
+            Arac arac = new Arac();
+            arac.setPlaka(plaka);
+            arac.setMarka(marka);
+            arac.setModel(model);
+            arac.setYil(yil);
+            arac.setKm(km);
+            arac.setKiralik(false);  // Varsayılan olarak kirada değil
+            arac.setAktif(true);
 
-        try (Statement stmnt = DBConnection.getConnection().createStatement()) {
-            ResultSet resultSet = stmnt.executeQuery("SELECT * FROM Arac");
-
-            while (resultSet.next()) {
-                Arac v = new Arac(
-                        resultSet.getInt("aracId"),
-                        resultSet.getString("plaka"),
-                        resultSet.getBoolean("kiralik"),
-                        resultSet.getString("model"),
-                        resultSet.getString("marka"),
-                        resultSet.getInt("km"),
-                        ((resultSet.getInt("isAssigned") == 1 )? "assigned" : "free")
-                );
-                aracs.add(v);
-            }
-
-        } catch (SQLException e) {
+            aracDAO.ekle(arac);
+            araclariYukle();
+            clearFields();
+            showAlert("Araç başarıyla eklendi.");
+        } catch (Exception e) {
             e.printStackTrace();
+            showAlert("Araç eklenirken hata oluştu.");
+        }
+    }
+
+    @FXML
+    private void aracSil() {
+        Arac secilenArac = aracTableView.getSelectionModel().getSelectedItem();
+        if (secilenArac == null) {
+            showAlert("Lütfen silinecek bir araç seçin.");
+            return;
         }
 
-        table.setItems(aracs);
+        try {
+            boolean basarili = aracDAO.pasifYap(secilenArac.getAracId());
+            if (basarili) {
+                araclariYukle();
+                showAlert("Araç başarıyla silindi.");
+            } else {
+                showAlert("Araç silinemedi.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Silme işlemi sırasında hata oluştu.");
+        }
     }
 
+    private void clearFields() {
+        plakaField.clear();
+        markaField.clear();
+        modelField.clear();
+        yilField.clear();
+        kmField.clear();
+    }
 
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Bilgilendirme");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

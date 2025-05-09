@@ -33,27 +33,32 @@ public class LoginController {
 
     @FXML
     private void loginPressed(ActionEvent event) {
-        // TODO: Handle login logic here
-        System.out.println("Login button pressed");
-        Kullanici kullanici = new Kullanici();
-        try {
-            KullaniciDAO kullaniciDAO = new KullaniciDAO(DBConnection.getConnection());
-            kullanici = kullaniciDAO.kullaniciGetirByName(kullaniciAdi.getText());
-            if (kullanici.getSifre().equals(sifre.getText())) {
-                goToNextStage();
-            }
-            else {
-                warningLabel.setText("giremedin zaa");
-            }
+        String girilenKullaniciAdi = kullaniciAdi.getText();
+        String girilenSifre = sifre.getText();
 
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (girilenKullaniciAdi == null || girilenKullaniciAdi.isEmpty()) {
+            warningLabel.setText("Kullanıcı adı boş olamaz.");
+            return;
         }
 
+        try (Connection conn = DBConnection.getConnection()) {
+            KullaniciDAO kullaniciDAO = new KullaniciDAO(conn);
+            Kullanici kullanici = kullaniciDAO.kullaniciGetirByName(girilenKullaniciAdi);
 
+            if (kullanici == null) {
+                warningLabel.setText("Kullanıcı bulunamadı.");
+            } else if (!kullanici.getSifre().equals(girilenSifre)) {
+                warningLabel.setText("Şifre yanlış.");
+            } else {
+                goToNextStage();
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            warningLabel.setText("Veritabanı hatası.");
+        }
     }
+
 
     @FXML
     private void continueWithoutAccount(ActionEvent event) {
@@ -64,7 +69,7 @@ public class LoginController {
     private void goToNextStage(){
         Parent root = null;
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("aracyonetim/view/ManagerView.fxml")));
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/aracyonetim/view/ManagerView.fxml")));
             Stage stage = new Stage();
             stage.setTitle("aracyonetim.model.Vehicle Fleet Management System");
             stage.setScene(new Scene(root));
