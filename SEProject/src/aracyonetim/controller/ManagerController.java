@@ -1,6 +1,7 @@
 package aracyonetim.controller;
 
 import aracyonetim.db.DBConnection;
+import aracyonetim.model.Arac;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,18 +17,17 @@ public class ManagerController {
     //aracyonetim.model.Vehicle property type 0 == > bizim uygulamadan kiralik, 1 ==> kendi araclari
 
     @FXML
-    private TableView<Vehicle> table = new TableView<>();
+    private TableView<Arac> table = new TableView<>();
 
     public ManagerController() {
 
-    //elif
     }
 
-    @FXML private TableColumn<Vehicle, Number> idColumn;
-    @FXML private TableColumn<Vehicle, String> modelColumn;
-    @FXML private TableColumn<Vehicle, String> brandColumn;
-    @FXML private TableColumn<Vehicle, String> assignmentColumn;
-    @FXML private TableColumn<Vehicle, String> propertyColumn;
+    @FXML private TableColumn<Arac, Number> idColumn;
+    @FXML private TableColumn<Arac, String> modelColumn;
+    @FXML private TableColumn<Arac, String> brandColumn;
+    @FXML private TableColumn<Arac, String> assignmentColumn;
+    @FXML private TableColumn<Arac, String> propertyColumn;
 
     @FXML
     public void initialize() {
@@ -37,29 +37,29 @@ public class ManagerController {
         assignmentColumn.setCellValueFactory(data-> data.getValue().isAssignedProperty());
         propertyColumn.setCellValueFactory(data -> data.getValue().propertyTypeProperty());
 
-        ObservableList<Vehicle> vehicles = FXCollections.observableArrayList();
+        ObservableList<Arac> aracs = FXCollections.observableArrayList();
 
         try (Statement stmnt = DBConnection.getConnection().createStatement()) {
-            ResultSet resultSet = stmnt.executeQuery("SELECT * FROM vehicles");
+            ResultSet resultSet = stmnt.executeQuery("SELECT * FROM Arac");
 
             while (resultSet.next()) {
-                Vehicle v = new Vehicle(
-                        resultSet.getInt("vehicle_id"),
-                        resultSet.getString("licence_plate"),
-                        ((resultSet.getInt("property_type") == 1) ? "rental" : "owned"),
+                Arac v = new Arac(
+                        resultSet.getInt("aracId"),
+                        resultSet.getString("plaka"),
+                        resultSet.getBoolean("kiralik"),
                         resultSet.getString("model"),
-                        resultSet.getString("brand"),
-                        resultSet.getInt("km_count"),
+                        resultSet.getString("marka"),
+                        resultSet.getInt("km"),
                         ((resultSet.getInt("isAssigned") == 1 )? "assigned" : "free")
                 );
-                vehicles.add(v);
+                aracs.add(v);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        table.setItems(vehicles);
+        table.setItems(aracs);
     }
 
 

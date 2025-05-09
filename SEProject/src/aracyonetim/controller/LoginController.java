@@ -1,6 +1,8 @@
 package aracyonetim.controller;
 
+import aracyonetim.dao.KullaniciDAO;
 import aracyonetim.db.DBConnection;
+import aracyonetim.model.Kullanici;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,13 +21,12 @@ import java.util.Objects;
 public class LoginController {
 
     public LoginController() {
-        DBConnection.initializeDB();
     }
 
     @FXML
-    private TextField empID;
+    private TextField kullaniciAdi;
     @FXML
-    private PasswordField empPass;
+    private PasswordField sifre;
     @FXML
     private Label warningLabel;
 
@@ -33,32 +34,25 @@ public class LoginController {
     @FXML
     private void loginPressed(ActionEvent event) {
         // TODO: Handle login logic here
-        System.out.println("Login button clicked");
-
-        String userID = empID.getText();
-        String password = empPass.getText();
-
-        ResultSet resultSet;
-        try (PreparedStatement statement = DBConnection.getConnection().prepareStatement("SELECT * FROM emp_login WHERE emp_id = ? AND emp_password = ?")) {
-
-            statement.setString(1, userID);
-            statement.setString(2, password);
-            resultSet = statement.executeQuery();
-
-            if(resultSet.next()){
-                System.out.println("Login successful");
-                Node n = (Node) event.getSource();
-                Stage stage = (Stage) n.getScene().getWindow();
-                stage.close();
+        System.out.println("Login button pressed");
+        Kullanici kullanici = new Kullanici();
+        try {
+            KullaniciDAO kullaniciDAO = new KullaniciDAO(DBConnection.getConnection());
+            kullanici = kullaniciDAO.kullaniciGetirByName(kullaniciAdi.getText());
+            if (kullanici.getSifre().equals(sifre.getText())) {
                 goToNextStage();
-            }else{
-                warningLabel.setText("ID or password wrong! Please try again");
+            }
+            else {
+                warningLabel.setText("giremedin zaa");
             }
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
+
+
     }
 
     @FXML

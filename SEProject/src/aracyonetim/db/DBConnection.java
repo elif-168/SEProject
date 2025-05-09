@@ -25,19 +25,6 @@ public class DBConnection {
             return conn;
     }
 
-    public static void initializeDB() {
-        String sql = "CREATE TABLE IF NOT EXISTS emp_login (" +
-                "emp_id INTEGER PRIMARY KEY," +
-                "emp_password varchar(45) NOT NULL);";
-
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("Database tables initialized");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }
 
 

@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="299.0" prefWidth="597.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.LoginController">
    <children>
-      <Label layoutX="95.0" layoutY="41.0" text="Welcome to the aracyonetim.model.Vehicle Fleet Management System!">
+      <Label layoutX="95.0" layoutY="41.0" text="Welcome to the aracyonetim.model.Arac Fleet Management System!">
          <font>
             <Font size="18.0" />
          </font>
@@ -17,8 +17,8 @@
       <Label layoutX="114.0" layoutY="97.0" text="Enter your employee login credentials or continue without an account." />
       <Label layoutX="159.0" layoutY="151.0" text="ID:" />
       <Label layoutX="114.0" layoutY="182.0" text="Password:" />
-      <TextField fx:id="empID" layoutX="196.0" layoutY="147.0" />
-      <PasswordField fx:id="empPass" layoutX="197.0" layoutY="178.0" />
+      <TextField fx:id="kullaniciAdi" layoutX="196.0" layoutY="147.0" />
+      <PasswordField fx:id="sifre" layoutX="197.0" layoutY="178.0" />
       <Button layoutX="379.0" layoutY="178.0" mnemonicParsing="false" onAction="#loginPressed" text="Login" />
       <Button layoutX="376.0" layoutY="232.0" mnemonicParsing="false" onAction="#continueWithoutAccount" text="Continue without account" />
       <Label fx:id="warningLabel" layoutX="95.0" layoutY="236.0" />

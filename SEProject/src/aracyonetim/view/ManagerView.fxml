@@ -11,7 +11,7 @@
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="843.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.ManagerController">
   <tabs>
-    <Tab text="aracyonetim.model.Vehicle Management">
+    <Tab text="aracyonetim.model.Arac Management">
          <content>
             <FlowPane prefHeight="200.0" prefWidth="200.0">
                <children>
