@@ -1,3 +1,6 @@
+package aracyonetim.controller;
+
+import aracyonetim.db.DBConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Objects;
@@ -68,9 +70,9 @@ public class LoginController {
     private void goToNextStage(){
         Parent root = null;
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ManagerView.fxml")));
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("aracyonetim/view/ManagerView.fxml")));
             Stage stage = new Stage();
-            stage.setTitle("Vehicle Fleet Management System");
+            stage.setTitle("aracyonetim.model.Vehicle Fleet Management System");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {

@@ -1,19 +1,19 @@
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
+package aracyonetim.controller;
+
+import aracyonetim.db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ManagerController {
 
-    //Vehicle property type 0 == > bizim uygulamadan kiralik, 1 ==> kendi araclari
+    //aracyonetim.model.Vehicle property type 0 == > bizim uygulamadan kiralik, 1 ==> kendi araclari
 
     @FXML
     private TableView<Vehicle> table = new TableView<>();

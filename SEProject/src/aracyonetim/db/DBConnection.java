@@ -1,3 +1,5 @@
+package aracyonetim.db;
+
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
