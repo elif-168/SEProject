@@ -1,6 +1,7 @@
 package aracyonetim.controller;
 
 import aracyonetim.dao.AracDAO;
+import aracyonetim.db.DBConnection;
 import aracyonetim.model.Arac;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -24,7 +25,7 @@ public class ManagerController {
 
     @FXML private TextField plakaField;
     @FXML private TextField markaField;
-    @FXML private TextField modelField;
+    @FXML private TextField modelField; 
     @FXML private TextField yilField;
     @FXML private TextField kmField;
 
@@ -32,7 +33,7 @@ public class ManagerController {
 
     public void initialize() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:veritabani.db");
+            Connection conn = DBConnection.getConnection();
             aracDAO = new AracDAO(conn);
             setupTableColumns();
             araclariYukle();

@@ -94,6 +94,7 @@ public class LoginController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("**********************");
             warningLabel.setText("Görünüm yüklenirken hata oluştu: " + e.getMessage());
         }
     }

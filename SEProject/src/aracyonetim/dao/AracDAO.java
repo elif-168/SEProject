@@ -249,7 +249,7 @@ public class AracDAO {
         arac.setYil(rs.getInt("yil"));
         arac.setKm(rs.getInt("km"));
         arac.setKiralik(rs.getBoolean("kiralik"));
-
+        /*
         Date kiraBaslangicTarihi = rs.getDate("kiraBaslangicTarihi");
         if (kiraBaslangicTarihi != null) {
             arac.setKiraBaslangicTarihi(kiraBaslangicTarihi.toLocalDate());
@@ -258,6 +258,15 @@ public class AracDAO {
         Date kiraBitisTarihi = rs.getDate("kiraBitisTarihi");
         if (kiraBitisTarihi != null) {
             arac.setKiraBitisTarihi(kiraBitisTarihi.toLocalDate());
+        }*/
+        String kiraBaslangicTarihiStr = rs.getString("kiraBaslangicTarihi");
+        if (kiraBaslangicTarihiStr != null) {
+            arac.setKiraBaslangicTarihi(LocalDate.parse(kiraBaslangicTarihiStr));
+        }
+
+        String kiraBitisTarihiStr = rs.getString("kiraBitisTarihi");
+        if (kiraBitisTarihiStr != null) {
+            arac.setKiraBitisTarihi(LocalDate.parse(kiraBitisTarihiStr));
         }
 
         arac.setAylikKiraBedeli(rs.getBigDecimal("aylikKiraBedeli"));
@@ -268,10 +277,7 @@ public class AracDAO {
             arac.setOlusturmaTarihi(olusturmaTarihi.toLocalDateTime());
         }
 
-        Timestamp guncellemeTarihi = rs.getTimestamp("guncellemeTarihi");
-        if (guncellemeTarihi != null) {
-            arac.setGuncellemeTarihi(guncellemeTarihi.toLocalDateTime());
-        }
+
 
         return arac;
     }

@@ -9,23 +9,23 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="843.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.ManagerController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="843.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.ManagerController">
   <tabs>
-    <Tab text="aracyonetim.model.Arac Management">
+    <Tab text="Araçlar">
          <content>
             <FlowPane prefHeight="200.0" prefWidth="200.0">
                <children>
                   <VBox prefHeight="552.0" prefWidth="394.0">
                      <children>
                         <Label fx:id="tableLabel" text="Label" />
-                        <TableView fx:id="table" prefHeight="534.0" prefWidth="436.0">
+                        <TableView fx:id="aracTableView" prefHeight="534.0" prefWidth="436.0">
                           <columns>
-                            <TableColumn fx:id="idColumn" prefWidth="75.0" text="Plaka" />
+                            <TableColumn fx:id="plakaColumn" prefWidth="75.0" text="Plaka" />
                             <TableColumn fx:id="modelColumn" prefWidth="75.0" text="Model" />
                               <TableColumn fx:id="markaColumn" prefWidth="75.0" text="Marka" />
-                              <TableColumn fx:id="assignmentColumn" prefWidth="75.0" text="Kiralık" />
-                              <TableColumn fx:id="propertyColumn" prefWidth="90.4000244140625" text="Yıl" />
-                              <TableColumn fx:id="" prefWidth="75.0" text="Km" />
+                              <TableColumn fx:id="kiralikColumn" prefWidth="75.0" text="Kiralık" />
+                              <TableColumn fx:id="yilColumn" prefWidth="90.4000244140625" text="Yıl" />
+                              <TableColumn fx:id="kmColumn" prefWidth="75.0" text="Km" />
                           </columns>
                         </TableView>
                      </children>
