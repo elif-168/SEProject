@@ -56,6 +56,21 @@ public class KullaniciDAO {
         return null;
     }
 
+    public List<Kullanici> firmadakiKullanicilariGetir(String firma) throws SQLException {
+        List<Kullanici> liste = new ArrayList<>();
+        String sql = "SELECT * FROM Kullanici WHERE firmaBilgisi = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, firma);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                liste.add(mapResultSetToKullanici(rs));
+            }
+
+        }
+        return liste;
+    }
+
     public List<Kullanici> tumKullanicilariGetir() throws SQLException {
         List<Kullanici> liste = new ArrayList<>();
         String sql = "SELECT * FROM Kullanici";

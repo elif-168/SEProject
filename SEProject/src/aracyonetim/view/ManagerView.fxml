@@ -1,40 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="843.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.ManagerController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="858.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.ManagerController">
   <tabs>
     <Tab text="Araçlar">
          <content>
-            <FlowPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <VBox prefHeight="552.0" prefWidth="394.0">
+                  <TableView fx:id="aracTableView" layoutY="26.0" prefHeight="818.0" prefWidth="466.0">
+                     <columns>
+                        <TableColumn fx:id="plakaColumn" prefWidth="75.0" text="Plaka" />
+                        <TableColumn fx:id="modelColumn" prefWidth="75.0" text="Model" />
+                        <TableColumn fx:id="markaColumn" prefWidth="75.0" text="Marka" />
+                        <TableColumn fx:id="kiralikColumn" prefWidth="75.0" text="Kiralık" />
+                        <TableColumn fx:id="yilColumn" prefWidth="90.4000244140625" text="Yıl" />
+                        <TableColumn fx:id="kmColumn" prefWidth="75.0" text="Km" />
+                     </columns>
+                  </TableView>
+                  <Label layoutX="14.0" layoutY="5.0" text="Özelliklerini görmek ve değişiklik yapmak için tablodan araç seçiniz" />
+                  <Pane layoutX="485.0" layoutY="28.0" prefHeight="531.0" prefWidth="362.0">
                      <children>
-                        <Label fx:id="tableLabel" text="Label" />
-                        <TableView fx:id="aracTableView" prefHeight="534.0" prefWidth="436.0">
-                          <columns>
-                            <TableColumn fx:id="plakaColumn" prefWidth="75.0" text="Plaka" />
-                            <TableColumn fx:id="modelColumn" prefWidth="75.0" text="Model" />
-                              <TableColumn fx:id="markaColumn" prefWidth="75.0" text="Marka" />
-                              <TableColumn fx:id="kiralikColumn" prefWidth="75.0" text="Kiralık" />
-                              <TableColumn fx:id="yilColumn" prefWidth="90.4000244140625" text="Yıl" />
-                              <TableColumn fx:id="kmColumn" prefWidth="75.0" text="Km" />
-                          </columns>
-                        </TableView>
+                        <AnchorPane layoutX="-2.0" prefHeight="542.0" prefWidth="364.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="22.0" prefHeight="9.0" prefWidth="206.0" text="Seçilen araç: ">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="aracBilgisi" layoutX="14.0" layoutY="48.0" text="(Görüntülemek için tablodan araç seçiniz)" />
+                              <Label layoutX="15.0" layoutY="82.0" text="Araca kullanıcı olarak çalışan atama:">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
+                               <Label layoutX="15.0" layoutY="120.0" text="Kullanıcı Listesi:" />
+                               <ListView fx:id="kullaniciListView" layoutX="15.0" layoutY="150.0" prefHeight="300.0" prefWidth="330.0" />
+                               <Button layoutX="15.0" layoutY="470.0" mnemonicParsing="false" onAction="#kullaniciAta" text="Kullanıcıyı Araçla Eşleştir" />
+
+                           </children>
+                        </AnchorPane>
                      </children>
-                  </VBox>
+                  </Pane>
                </children>
-            </FlowPane>
+            </AnchorPane>
          </content>
     </Tab>
-    <Tab text="Reporting">
+    <Tab text="Raporlama">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
       </content>
