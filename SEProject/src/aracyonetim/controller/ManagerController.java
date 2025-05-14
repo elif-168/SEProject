@@ -158,4 +158,17 @@ public class ManagerController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    @FXML
+    private void raporOlustur() {}
+
+    @FXML
+    private void raporuPDFOlarakAktar() {}
+
+    @FXML
+    private void raporuExcelOlarakAktar() {}
+
+    @FXML
+    private void raporuCSVOlarakAktar() {}
+
+
 }
