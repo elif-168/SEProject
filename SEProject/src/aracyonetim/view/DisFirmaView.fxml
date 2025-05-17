@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="aracyonetim.controller.DisFirmaController">
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="kullaniciLabel" style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Hoş geldiniz, Kullanıcı" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button onAction="#cikisYap" text="Çıkış Yap" />
+            </HBox>
+            <Separator />
+        </VBox>
+    </top>
+    
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Raporlama">
+                <BorderPane>
+                    <left>
+                        <VBox spacing="10" prefWidth="450">
+                            <padding>
+                                <Insets top="10" right="10" bottom="10" left="10"/>
+                            </padding>
+                            <Label text="Araçlar" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+                            <TableView fx:id="aracTableView" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="plakaColumn" text="Plaka" prefWidth="80" />
+                                    <TableColumn fx:id="markaColumn" text="Marka" prefWidth="100" />
+                                    <TableColumn fx:id="modelColumn" text="Model" prefWidth="100" />
+                                    <TableColumn fx:id="yilColumn" text="Yıl" prefWidth="60" />
+                                    <TableColumn fx:id="kmColumn" text="KM" prefWidth="80" />
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </left>
+                    
+                    <center>
+                        <VBox spacing="10">
+                            <padding>
+                                <Insets top="10" right="10" bottom="10" left="10"/>
+                            </padding>
+                            
+                            <GridPane hgap="10" vgap="10">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="120" />
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="150" />
+                                    <ColumnConstraints hgrow="NEVER" minWidth="120" />
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="150" />
+                                </columnConstraints>
+                                
+                                <Label text="Başlangıç Tarihi:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                <DatePicker fx:id="baslangicTarihiPicker" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                                
+                                <Label text="Bitiş Tarihi:" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+                                <DatePicker fx:id="bitisTarihiPicker" GridPane.rowIndex="0" GridPane.columnIndex="3" />
+                                
+                                <CheckBox fx:id="tarihFiltreCheckBox" text="Tarih Filtresini Kullan" selected="true" 
+                                         GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+                                
+                                <Label text="Rapor Tipi:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                                <ComboBox fx:id="raporTipiComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                                
+                                <Button text="Filtrele" onAction="#tarihFiltrele" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+                            </GridPane>
+                            
+                            <HBox spacing="10">
+                                <Button text="Rapor Oluştur" onAction="#raporOlustur" />
+                                <Button text="PDF'e Aktar" onAction="#raporuPDFOlarakAktar" />
+                                <Button text="Excel'e Aktar" onAction="#raporuExcelOlarakAktar" />
+                                <Button text="CSV'ye Aktar" onAction="#raporuCSVOlarakAktar" />
+                                <Button text="Maliyet Tahmini" onAction="#maliyetTahminiHesapla" />
+                            </HBox>
+                            
+                            <Separator />
+                            
+                            <HBox VBox.vgrow="ALWAYS" spacing="10">
+                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                    <Label text="Harcama Kayıtları" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+                                    <TableView fx:id="harcamaTableView" VBox.vgrow="ALWAYS">
+                                        <columns>
+                                            <TableColumn fx:id="tarihColumn" text="Tarih" prefWidth="100" />
+                                            <TableColumn fx:id="harcamaTipiColumn" text="Harcama Tipi" prefWidth="100" />
+                                            <TableColumn fx:id="tutarColumn" text="Tutar (TL)" prefWidth="100" />
+                                            <TableColumn fx:id="aciklamaColumn" text="Açıklama" prefWidth="150" />
+                                        </columns>
+                                    </TableView>
+                                    <Label fx:id="toplamHarcamaLabel" style="-fx-font-weight: bold;" text="Toplam Harcama: 0.00 TL" />
+                                </VBox>
+                                
+                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                    <Label text="Harcama Grafiği" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+                                    <BarChart fx:id="harcamaGrafigi" VBox.vgrow="ALWAYS">
+                                        <xAxis>
+                                            <CategoryAxis fx:id="xAxis" label="Harcama Tipi" />
+                                        </xAxis>
+                                        <yAxis>
+                                            <NumberAxis fx:id="yAxis" label="Tutar (TL)" />
+                                        </yAxis>
+                                    </BarChart>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </center>
+                </BorderPane>
+            </Tab>
+            
+            <Tab text="Araç Yönetimi">
+                <BorderPane>
+                    <center>
+                        <VBox spacing="15">
+                            <padding>
+                                <Insets top="10" right="10" bottom="10" left="10"/>
+                            </padding>
+                            
+                            <Label text="Yeni Araç Ekle" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+                            
+                            <GridPane hgap="10" vgap="10">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="NEVER" minWidth="100" />
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
+                                </columnConstraints>
+                                
+                                <Label text="Plaka:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                <TextField fx:id="plakaField" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="34ABC123" />
+                                
+                                <Label text="Marka:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                <TextField fx:id="markaField" GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Toyota" />
+                                
+                                <Label text="Model:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                                <TextField fx:id="modelField" GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="Corolla" />
+                                
+                                <Label text="Yıl:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                                <TextField fx:id="yilField" GridPane.rowIndex="3" GridPane.columnIndex="1" promptText="2022" />
+                                
+                                <Label text="KM:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                                <TextField fx:id="kmField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="15000" />
+                            </GridPane>
+                            
+                            <HBox spacing="10">
+                                <Button text="Araç Ekle" onAction="#aracEkle" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                            </HBox>
+                            
+                            <Separator />
+                            
+                            <TableView fx:id="tumAraclarTableView" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="tumAraclarPlakaColumn" text="Plaka" prefWidth="80" />
+                                    <TableColumn fx:id="tumAraclarMarkaColumn" text="Marka" prefWidth="100" />
+                                    <TableColumn fx:id="tumAraclarModelColumn" text="Model" prefWidth="100" />
+                                    <TableColumn fx:id="tumAraclarYilColumn" text="Yıl" prefWidth="60" />
+                                    <TableColumn fx:id="tumAraclarKmColumn" text="KM" prefWidth="80" />
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </center>
+                </BorderPane>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane> 

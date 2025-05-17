@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import java.net.URL?>
+
+<StackPane prefHeight="600.0" prefWidth="650.0" styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.SignUpController">
+   <stylesheets>
+      <URL value="@modern-style.css" />
+   </stylesheets>
+   <children>
+      <VBox alignment="CENTER" maxWidth="500.0" styleClass="login-panel">
+         <children>
+            <Label styleClass="login-title" text="Yeni Hesap Oluştur" />
+            <Label fx:id="errorLabel" alignment="CENTER" prefHeight="17.0" prefWidth="400.0" styleClass="error-text" />
+            
+            <VBox spacing="10.0">
+               <padding>
+                  <Insets top="20.0" bottom="20.0" />
+               </padding>
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Ad:" />
+                        <TextField fx:id="firstNameField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Soyad:" />
+                        <TextField fx:id="lastNameField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Email:" />
+                        <TextField fx:id="emailField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Şifre:" />
+                        <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Şifre Tekrar:" />
+                        <PasswordField fx:id="confirmPasswordField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Telefon:" />
+                        <TextField fx:id="phoneField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Firma:" />
+                        <TextField fx:id="companyField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="120.0" text="Rol:" />
+                        <ComboBox fx:id="roleComboBox" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Button onAction="#handleSignUp" text="Kayıt Ol" />
+                  <Button onAction="#handleCancel" text="İptal" styleClass="button-outlined" />
+               </children>
+               <padding>
+                  <Insets top="10.0" bottom="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</StackPane> 
