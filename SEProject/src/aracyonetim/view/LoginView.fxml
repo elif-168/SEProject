@@ -5,22 +5,54 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="299.0" prefWidth="597.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.LoginController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aracyonetim.controller.LoginController">
+   <stylesheets>
+      <URL value="@modern-style.css" />
+   </stylesheets>
    <children>
-      <Label layoutX="95.0" layoutY="41.0" text="Welcome to the aracyonetim.model.Arac Fleet Management System!">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="114.0" layoutY="97.0" text="Enter your employee login credentials or continue without an account." />
-      <Label layoutX="159.0" layoutY="151.0" text="ID:" />
-      <Label layoutX="114.0" layoutY="182.0" text="Password:" />
-      <TextField fx:id="kullaniciAdi" layoutX="196.0" layoutY="147.0" />
-      <PasswordField fx:id="sifre" layoutX="197.0" layoutY="178.0" />
-      <Button layoutX="379.0" layoutY="178.0" mnemonicParsing="false" onAction="#loginPressed" text="Login" />
-      <Button layoutX="376.0" layoutY="232.0" mnemonicParsing="false" onAction="#continueWithoutAccount" text="Continue without account" />
-      <Label fx:id="warningLabel" layoutX="95.0" layoutY="236.0" />
+      <VBox alignment="CENTER" maxWidth="450.0" styleClass="login-panel">
+         <children>
+            <Label styleClass="login-title" text="Araç Yönetim Sistemi" />
+            <Label styleClass="section-header" text="Araç Filo Yönetim Sistemine Hoş Geldiniz" />
+            <Label text="Lütfen giriş bilgilerinizi girin veya hesapsız devam edin." />
+            <VBox spacing="10.0">
+               <padding>
+                  <Insets top="20.0" bottom="20.0" />
+               </padding>
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="80.0" text="Email:" />
+                        <TextField fx:id="emailField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label prefWidth="80.0" text="Şifre:" />
+                        <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <Button onAction="#handleLogin" text="Giriş Yap" />
+                  <Button onAction="#openSignUpForm" text="Kayıt Ol" styleClass="button-outlined" />
+               </children>
+               <padding>
+                  <Insets top="10.0" bottom="10.0" />
+               </padding>
+            </HBox>
+            <Button onAction="#continueWithoutAccount" text="Hesapsız Devam Et" styleClass="button-secondary" />
+            <Label fx:id="warningLabel" styleClass="error-text" />
+         </children>
+      </VBox>
    </children>
-</AnchorPane>
+</StackPane>

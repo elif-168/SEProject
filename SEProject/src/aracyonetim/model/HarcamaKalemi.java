@@ -4,34 +4,29 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * Harcama kalemlerini temsil eden model sınıfı
+ * Harcama kalemi bilgilerini temsil eden model sınıfı
  */
 public class HarcamaKalemi {
-    
     private int id;
     private int aracId;
     private String plaka;
-    private String harcamaTipi; // Bakım, Yakıt, Tamir, Kasko vb.
     private LocalDate tarih;
+    private String harcamaTipi;
     private BigDecimal tutar;
     private String aciklama;
-    
+
     public HarcamaKalemi() {
     }
 
-    public HarcamaKalemi(int id, int aracId, String plaka, String harcamaTipi, 
-                         LocalDate tarih, BigDecimal tutar, String aciklama) {
-        this.id = id;
+    public HarcamaKalemi(int aracId, String plaka, LocalDate tarih, String harcamaTipi, BigDecimal tutar, String aciklama) {
         this.aracId = aracId;
         this.plaka = plaka;
-        this.harcamaTipi = harcamaTipi;
         this.tarih = tarih;
+        this.harcamaTipi = harcamaTipi;
         this.tutar = tutar;
         this.aciklama = aciklama;
     }
 
-    // Getters ve Setters
-    
     public int getId() {
         return id;
     }
@@ -56,20 +51,20 @@ public class HarcamaKalemi {
         this.plaka = plaka;
     }
 
-    public String getHarcamaTipi() {
-        return harcamaTipi;
-    }
-
-    public void setHarcamaTipi(String harcamaTipi) {
-        this.harcamaTipi = harcamaTipi;
-    }
-
     public LocalDate getTarih() {
         return tarih;
     }
 
     public void setTarih(LocalDate tarih) {
         this.tarih = tarih;
+    }
+
+    public String getHarcamaTipi() {
+        return harcamaTipi;
+    }
+
+    public void setHarcamaTipi(String harcamaTipi) {
+        this.harcamaTipi = harcamaTipi;
     }
 
     public BigDecimal getTutar() {

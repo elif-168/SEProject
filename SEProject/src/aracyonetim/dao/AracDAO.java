@@ -234,6 +234,51 @@ public class AracDAO {
     }
 
     /**
+     * Belirli bir kullanıcıya atanmış araçları getirir
+     * @param kullaniciId Kullanıcı ID'si
+     * @return Kullanıcıya atanmış araç listesi
+     * @throws SQLException Veritabanı hatası durumunda
+     */
+    public List<Arac> kullanicininAraclari(int kullaniciId) throws SQLException {
+        String sql = "SELECT a.* FROM Arac a " +
+                     "JOIN KullaniciArac ka ON a.aracId = ka.aracId " +
+                     "WHERE ka.kullaniciId = ? AND a.aktif = 1";
+
+        List<Arac> aracList = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, kullaniciId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    aracList.add(resultSetToArac(rs));
+                }
+            }
+        }
+
+        return aracList;
+    }
+
+    /**
+     * Aracın kilometresini günceller
+     * @param aracId Araç ID'si
+     * @param km Yeni kilometre değeri
+     * @return İşlem başarılı ise true
+     * @throws SQLException Veritabanı hatası durumunda
+     */
+    public boolean kmGuncelle(int aracId, int km) throws SQLException {
+        String sql = "UPDATE Arac SET km = ? WHERE aracId = ? AND aktif = 1";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, km);
+            stmt.setInt(2, aracId);
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        }
+    }
+
+    /**
      * ResultSet'ten Arac nesnesine dönüşüm yapar
      * @param rs ResultSet
      * @return Arac nesnesi

@@ -10,269 +10,290 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Harcama raporları için veritabanı işlemlerini yöneten DAO sınıfı
+ * Harcama işlemleri için DAO sınıfı
  */
 public class HarcamaDAO {
-    
     private Connection connection;
-    
+
     public HarcamaDAO(Connection connection) {
         this.connection = connection;
     }
-    
+
     /**
-     * Belirtilen tarih aralığında ve araç ID'sine göre bakım ve hasar harcamalarını getirir
-     * 
-     * @param baslangicTarihi Başlangıç tarihi
-     * @param bitisTarihi Bitiş tarihi
-     * @param aracId Araç ID (null ise tüm araçlar)
-     * @return Bakım ve hasar harcama kalemleri listesi
-     * @throws SQLException
+     * Yeni bir harcama kaydı ekler
+     * @param harcama Eklenecek harcama
+     * @return Eklenen harcamanın ID'si
+     * @throws SQLException Veritabanı hatası durumunda
      */
-    public List<HarcamaKalemi> bakimHarcamalariniGetir(LocalDate baslangicTarihi, LocalDate bitisTarihi, Integer aracId) throws SQLException {
-        List<HarcamaKalemi> harcamalar = new ArrayList<>();
-        
-        String sql = "SELECT b.id, b.arac_id, a.plaka, 'Bakım/Hasar' as harcama_tipi, " +
-                     "b.tarih, b.tutar, b.aciklama " +
-                     "FROM BakimVeHasar b " +
-                     "JOIN Arac a ON b.arac_id = a.arac_id " +
-                     "WHERE b.tarih BETWEEN ? AND ? ";
-        
-        // Eğer belirli bir araç seçilmişse sorguya ekle
-        if (aracId != null) {
-            sql += "AND b.arac_id = ? ";
-        }
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setDate(1, Date.valueOf(baslangicTarihi));
-            stmt.setDate(2, Date.valueOf(bitisTarihi));
+    public int harcamaEkle(HarcamaKalemi harcama) throws SQLException {
+        String sql = "INSERT INTO HarcamaKalemi (aracId, tarih, harcamaTipi, tutar, aciklama) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setInt(1, harcama.getAracId());
             
-            if (aracId != null) {
-                stmt.setInt(3, aracId);
+            // SQLite doesn't have a specific date type, it stores dates as TEXT
+            // Format the date as ISO string (YYYY-MM-DD) which SQLite can understand
+            stmt.setString(2, harcama.getTarih().toString());
+            
+            stmt.setString(3, harcama.getHarcamaTipi());
+            stmt.setBigDecimal(4, harcama.getTutar());
+            stmt.setString(5, harcama.getAciklama());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Harcama ekleme başarısız oldu, etkilenen satır yok");
             }
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    HarcamaKalemi harcama = new HarcamaKalemi();
-                    harcama.setId(rs.getInt("id"));
-                    harcama.setAracId(rs.getInt("arac_id"));
-                    harcama.setPlaka(rs.getString("plaka"));
-                    harcama.setHarcamaTipi(rs.getString("harcama_tipi"));
-                    harcama.setTarih(rs.getDate("tarih").toLocalDate());
-                    harcama.setTutar(rs.getBigDecimal("tutar"));
-                    harcama.setAciklama(rs.getString("aciklama"));
-                    
-                    harcamalar.add(harcama);
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    harcama.setId(generatedKeys.getInt(1));
+                    return harcama.getId();
+                } else {
+                    throw new SQLException("Harcama ekleme başarısız oldu, ID alınamadı");
                 }
             }
         }
-        
-        return harcamalar;
     }
-    
+
     /**
-     * Belirtilen tarih aralığında ve araç ID'sine göre değişen parça harcamalarını getirir
-     * 
-     * @param baslangicTarihi Başlangıç tarihi
-     * @param bitisTarihi Bitiş tarihi
-     * @param aracId Araç ID (null ise tüm araçlar)
-     * @return Değişen parça harcama kalemleri listesi
-     * @throws SQLException
+     * Bir araca ait tüm harcama kayıtlarını getirir
+     * @param aracId Araç ID'si
+     * @return Harcama listesi
+     * @throws SQLException Veritabanı hatası durumunda
      */
-    public List<HarcamaKalemi> tamirHarcamalariniGetir(LocalDate baslangicTarihi, LocalDate bitisTarihi, Integer aracId) throws SQLException {
-        List<HarcamaKalemi> harcamalar = new ArrayList<>();
-        
-        String sql = "SELECT d.id, d.arac_id, a.plaka, 'Tamir' as harcama_tipi, " +
-                     "d.tarih, d.fiyat as tutar, d.parca_adi as aciklama " +
-                     "FROM DegisenParca d " +
-                     "JOIN Arac a ON d.arac_id = a.arac_id " +
-                     "WHERE d.tarih BETWEEN ? AND ? ";
-        
-        // Eğer belirli bir araç seçilmişse sorguya ekle
-        if (aracId != null) {
-            sql += "AND d.arac_id = ? ";
-        }
-        
+    public List<HarcamaKalemi> aracHarcamalariGetir(int aracId) throws SQLException {
+        String sql = "SELECT hk.*, a.plaka FROM HarcamaKalemi hk " +
+                    "JOIN Arac a ON hk.aracId = a.aracId " +
+                    "WHERE hk.aracId = ? ORDER BY hk.tarih DESC";
+
+        List<HarcamaKalemi> harcamaList = new ArrayList<>();
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setDate(1, Date.valueOf(baslangicTarihi));
-            stmt.setDate(2, Date.valueOf(bitisTarihi));
-            
-            if (aracId != null) {
-                stmt.setInt(3, aracId);
-            }
-            
+            stmt.setInt(1, aracId);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    HarcamaKalemi harcama = new HarcamaKalemi();
-                    harcama.setId(rs.getInt("id"));
-                    harcama.setAracId(rs.getInt("arac_id"));
-                    harcama.setPlaka(rs.getString("plaka"));
-                    harcama.setHarcamaTipi(rs.getString("harcama_tipi"));
-                    harcama.setTarih(rs.getDate("tarih").toLocalDate());
-                    harcama.setTutar(rs.getBigDecimal("tutar"));
-                    harcama.setAciklama(rs.getString("aciklama"));
-                    
-                    harcamalar.add(harcama);
+                    harcamaList.add(resultSetToHarcama(rs));
                 }
             }
         }
-        
-        return harcamalar;
+
+        return harcamaList;
     }
-    
+
     /**
-     * Belirtilen tarih aralığında ve araç ID'sine göre yakıt harcamalarını getirir
-     * 
+     * Belirli bir tarih aralığında bir araca ait harcama kayıtlarını getirir
+     * @param aracId Araç ID'si
      * @param baslangicTarihi Başlangıç tarihi
      * @param bitisTarihi Bitiş tarihi
-     * @param aracId Araç ID (null ise tüm araçlar)
-     * @return Yakıt harcama kalemleri listesi
-     * @throws SQLException
+     * @return Harcama listesi
+     * @throws SQLException Veritabanı hatası durumunda
      */
-    public List<HarcamaKalemi> yakitHarcamalariniGetir(LocalDate baslangicTarihi, LocalDate bitisTarihi, Integer aracId) throws SQLException {
-        List<HarcamaKalemi> harcamalar = new ArrayList<>();
-        
-        String sql = "SELECT y.id, y.arac_id, a.plaka, 'Yakıt' as harcama_tipi, " +
-                     "y.tarih, y.tutar, 'Yakıt Alımı' as aciklama " +
-                     "FROM YakitKaydi y " +
-                     "JOIN Arac a ON y.arac_id = a.arac_id " +
-                     "WHERE y.tarih BETWEEN ? AND ? ";
-        
-        // Eğer belirli bir araç seçilmişse sorguya ekle
-        if (aracId != null) {
-            sql += "AND y.arac_id = ? ";
-        }
-        
+    public List<HarcamaKalemi> aracHarcamalariGetirByDateRange(int aracId, LocalDate baslangicTarihi, LocalDate bitisTarihi) throws SQLException {
+        String sql = "SELECT hk.*, a.plaka FROM HarcamaKalemi hk " +
+                    "JOIN Arac a ON hk.aracId = a.aracId " +
+                    "WHERE hk.aracId = ? AND hk.tarih BETWEEN ? AND ? " +
+                    "ORDER BY hk.tarih DESC";
+
+        List<HarcamaKalemi> harcamaList = new ArrayList<>();
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setDate(1, Date.valueOf(baslangicTarihi));
-            stmt.setDate(2, Date.valueOf(bitisTarihi));
-            
-            if (aracId != null) {
-                stmt.setInt(3, aracId);
-            }
-            
+            stmt.setInt(1, aracId);
+            stmt.setString(2, baslangicTarihi.toString());
+            stmt.setString(3, bitisTarihi.toString());
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    HarcamaKalemi harcama = new HarcamaKalemi();
-                    harcama.setId(rs.getInt("id"));
-                    harcama.setAracId(rs.getInt("arac_id"));
-                    harcama.setPlaka(rs.getString("plaka"));
-                    harcama.setHarcamaTipi(rs.getString("harcama_tipi"));
-                    harcama.setTarih(rs.getDate("tarih").toLocalDate());
-                    harcama.setTutar(rs.getBigDecimal("tutar"));
-                    harcama.setAciklama(rs.getString("aciklama"));
-                    
-                    harcamalar.add(harcama);
+                    harcamaList.add(resultSetToHarcama(rs));
                 }
             }
         }
-        
-        return harcamalar;
+
+        return harcamaList;
     }
-    
+
     /**
-     * Belirtilen tarih aralığında ve araç ID'sine göre kasko harcamalarını getirir
-     * (Veritabanında kasko tablosu gösterilmediği için varsayılan olarak bu metodu ekliyorum)
-     * 
-     * @param baslangicTarihi Başlangıç tarihi
-     * @param bitisTarihi Bitiş tarihi
-     * @param aracId Araç ID (null ise tüm araçlar)
-     * @return Kasko harcama kalemleri listesi
-     * @throws SQLException
+     * Belirli bir tipdeki harcama kayıtlarını getirir
+     * @param harcamaTipi Harcama tipi
+     * @return Harcama listesi
+     * @throws SQLException Veritabanı hatası durumunda
      */
-    public List<HarcamaKalemi> kaskoHarcamalariniGetir(LocalDate baslangicTarihi, LocalDate bitisTarihi, Integer aracId) throws SQLException {
-        // Veri tabanında Kasko ile ilgili bir tablo bilgisi verilmediği için örnek olarak boş liste dönüyoruz
-        // Eğer bir Kasko tablosu varsa, buraya uygun sorgu yazılmalıdır
-        List<HarcamaKalemi> harcamalar = new ArrayList<>();
-        
-        // Kasko tablosu olsaydı burada uygun sorgu yapılırdı
-        // Örnek veri oluşturmak için (gerçek uygulama değil)
-        if (aracId != null) {
-            // Örnek veri
-            HarcamaKalemi harcama = new HarcamaKalemi();
-            harcama.setId(1);
-            harcama.setAracId(aracId);
-            harcama.setPlaka("Örnek Plaka");
-            harcama.setHarcamaTipi("Kasko");
-            harcama.setTarih(LocalDate.now());
-            harcama.setTutar(new BigDecimal("1500.00"));
-            harcama.setAciklama("Örnek Kasko Harcaması");
-            
-            harcamalar.add(harcama);
+    public List<HarcamaKalemi> tipBazliHarcamalarGetir(String harcamaTipi) throws SQLException {
+        String sql = "SELECT hk.*, a.plaka FROM HarcamaKalemi hk " +
+                    "JOIN Arac a ON hk.aracId = a.aracId " +
+                    "WHERE hk.harcamaTipi = ? ORDER BY hk.tarih DESC";
+
+        List<HarcamaKalemi> harcamaList = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, harcamaTipi);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    harcamaList.add(resultSetToHarcama(rs));
+                }
+            }
         }
-        
-        return harcamalar;
+
+        return harcamaList;
     }
-    
+
     /**
-     * Belirtilen tipte bir rapor oluşturur
-     * 
-     * @param raporTipi Rapor tipi (bakım, kasko, yakıt, tamir, genel toplam)
+     * Harcama raporu oluşturur
+     * @param raporTipi Rapor tipi (araç bazlı, tarih bazlı, harcama tipi bazlı, genel toplam)
      * @param baslangicTarihi Başlangıç tarihi
      * @param bitisTarihi Bitiş tarihi
-     * @param aracId Araç ID (null ise tüm araçlar)
-     * @return Oluşturulan harcama raporu
-     * @throws SQLException
+     * @param aracId Araç ID'si (null ise tüm araçlar)
+     * @return Harcama raporu
+     * @throws SQLException Veritabanı hatası durumunda
      */
     public HarcamaRaporu raporOlustur(String raporTipi, LocalDate baslangicTarihi, LocalDate bitisTarihi, Integer aracId) throws SQLException {
+        StringBuilder sqlBuilder = new StringBuilder(
+            "SELECT hk.*, a.plaka FROM HarcamaKalemi hk " +
+            "JOIN Arac a ON hk.aracId = a.aracId " +
+            "WHERE hk.tarih BETWEEN ? AND ? ");
+
+        if (aracId != null) {
+            sqlBuilder.append("AND hk.aracId = ? ");
+        }
+
+        sqlBuilder.append("ORDER BY ");
+        
+        switch (raporTipi.toLowerCase()) {
+            case "araç bazlı rapor":
+                sqlBuilder.append("hk.aracId, hk.tarih DESC");
+                break;
+            case "harcama tipi bazlı rapor":
+                sqlBuilder.append("hk.harcamaTipi, hk.tarih DESC");
+                break;
+            case "tarih bazlı rapor":
+                sqlBuilder.append("hk.tarih DESC");
+                break;
+            default:
+                sqlBuilder.append("hk.tarih DESC");
+                break;
+        }
+
+        List<HarcamaKalemi> harcamaList = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sqlBuilder.toString())) {
+            // Use strings for dates in SQLite
+            stmt.setString(1, baslangicTarihi.toString());
+            stmt.setString(2, bitisTarihi.toString());
+            
+            if (aracId != null) {
+                stmt.setInt(3, aracId);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    harcamaList.add(resultSetToHarcama(rs));
+                }
+            }
+        }
+
         HarcamaRaporu rapor = new HarcamaRaporu();
         rapor.setRaporTipi(raporTipi);
         rapor.setBaslangicTarihi(baslangicTarihi);
         rapor.setBitisTarihi(bitisTarihi);
-        rapor.setAracId(aracId);
+        rapor.setHarcamaKalemleri(harcamaList);
         
-        List<HarcamaKalemi> harcamaKalemleri = new ArrayList<>();
-        
-        switch (raporTipi.toLowerCase()) {
-            case "bakım":
-                harcamaKalemleri = bakimHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId);
-                break;
-            case "tamir":
-                harcamaKalemleri = tamirHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId);
-                break;
-            case "yakıt":
-                harcamaKalemleri = yakitHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId);
-                break;
-            case "kasko":
-                harcamaKalemleri = kaskoHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId);
-                break;
-            case "genel toplam":
-                // Tüm harcama tiplerini birleştir
-                harcamaKalemleri.addAll(bakimHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId));
-                harcamaKalemleri.addAll(tamirHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId));
-                harcamaKalemleri.addAll(yakitHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId));
-                harcamaKalemleri.addAll(kaskoHarcamalariniGetir(baslangicTarihi, bitisTarihi, aracId));
-                break;
-            default:
-                throw new IllegalArgumentException("Geçersiz rapor tipi: " + raporTipi);
-        }
-        
-        rapor.setHarcamaKalemleri(harcamaKalemleri);
         return rapor;
     }
     
     /**
-     * Tüm araçları getirir
-     * 
-     * @return Araç ID ve Plaka içeren liste
-     * @throws SQLException
+     * Tüm zamanları kapsayan harcama raporu oluşturur (herhangi bir tarih filtresi olmadan)
+     * @param raporTipi Rapor tipi (araç bazlı, tarih bazlı, harcama tipi bazlı, genel toplam)
+     * @param aracId Araç ID'si (null ise tüm araçlar)
+     * @return Harcama raporu
+     * @throws SQLException Veritabanı hatası durumunda
      */
-    public List<Object[]> tumAraclariGetir() throws SQLException {
-        List<Object[]> araclar = new ArrayList<>();
+    public HarcamaRaporu raporOlusturTumZamanlar(String raporTipi, Integer aracId) throws SQLException {
+        StringBuilder sqlBuilder = new StringBuilder(
+            "SELECT hk.*, a.plaka FROM HarcamaKalemi hk " +
+            "JOIN Arac a ON hk.aracId = a.aracId ");
+
+        if (aracId != null) {
+            sqlBuilder.append("WHERE hk.aracId = ? ");
+        }
+
+        sqlBuilder.append("ORDER BY ");
         
-        String sql = "SELECT aracId, plaka FROM Arac WHERE aktif = 1";
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
-            while (rs.next()) {
-                Object[] arac = new Object[2];
-                arac[0] = rs.getInt("arac_id");
-                arac[1] = rs.getString("plaka");
-                araclar.add(arac);
+        switch (raporTipi.toLowerCase()) {
+            case "araç bazlı rapor":
+                sqlBuilder.append("hk.aracId, hk.tarih ASC");
+                break;
+            case "harcama tipi bazlı rapor":
+                sqlBuilder.append("hk.harcamaTipi, hk.tarih ASC");
+                break;
+            case "tarih bazlı rapor":
+                sqlBuilder.append("hk.tarih ASC");
+                break;
+            default:
+                sqlBuilder.append("hk.tarih ASC");
+                break;
+        }
+
+        List<HarcamaKalemi> harcamaList = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sqlBuilder.toString())) {
+            if (aracId != null) {
+                stmt.setInt(1, aracId);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    harcamaList.add(resultSetToHarcama(rs));
+                }
             }
         }
+
+        // Get the min and max dates from the results
+        LocalDate minDate = LocalDate.now();
+        LocalDate maxDate = LocalDate.now();
         
-        return araclar;
+        if (!harcamaList.isEmpty()) {
+            minDate = harcamaList.stream()
+                    .map(HarcamaKalemi::getTarih)
+                    .min(LocalDate::compareTo)
+                    .orElse(LocalDate.now());
+            
+            maxDate = harcamaList.stream()
+                    .map(HarcamaKalemi::getTarih)
+                    .max(LocalDate::compareTo)
+                    .orElse(LocalDate.now());
+        }
+
+        HarcamaRaporu rapor = new HarcamaRaporu();
+        rapor.setRaporTipi(raporTipi);
+        rapor.setBaslangicTarihi(minDate);
+        rapor.setBitisTarihi(maxDate);
+        rapor.setHarcamaKalemleri(harcamaList);
+        
+        return rapor;
+    }
+
+    private HarcamaKalemi resultSetToHarcama(ResultSet rs) throws SQLException {
+        HarcamaKalemi harcama = new HarcamaKalemi();
+        
+        harcama.setId(rs.getInt("id"));
+        harcama.setAracId(rs.getInt("aracId"));
+        harcama.setPlaka(rs.getString("plaka"));
+        
+        // Handle date conversion from string to LocalDate
+        String dateStr = rs.getString("tarih");
+        try {
+            harcama.setTarih(LocalDate.parse(dateStr));
+        } catch (Exception e) {
+            // If parsing fails, default to today's date
+            harcama.setTarih(LocalDate.now());
+        }
+        
+        harcama.setHarcamaTipi(rs.getString("harcamaTipi"));
+        harcama.setTutar(rs.getBigDecimal("tutar"));
+        harcama.setAciklama(rs.getString("aciklama"));
+        
+        return harcama;
     }
 }

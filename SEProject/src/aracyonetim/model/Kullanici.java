@@ -1,24 +1,43 @@
 package aracyonetim.model;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Kullanici {
-    private int kullaniciId;
+    private Integer kullaniciId;
     private String ad;
     private String soyad;
     private String kullaniciAdi;
     private String sifre;
     private String email;
     private String telefon;
+    private String firma;
     private String rol;
     private String departman;
     private String firmaBilgisi;
     private boolean aktif;
     private Timestamp olusturmaTarihi;
+    private LocalDateTime guncellemeTarihi;
+
+    public Kullanici() {
+        this.aktif = true;
+        this.olusturmaTarihi = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    public Kullanici(String ad, String soyad, String email, String telefon, String firma, String rol, String sifre) {
+        this();
+        this.ad = ad;
+        this.soyad = soyad;
+        this.email = email;
+        this.telefon = telefon;
+        this.firma = firma;
+        this.rol = rol;
+        this.sifre = sifre;
+    }
 
     // Getter ve Setter'lar
-    public int getKullaniciId() { return kullaniciId; }
-    public void setKullaniciId(int kullaniciId) { this.kullaniciId = kullaniciId; }
+    public Integer getKullaniciId() { return kullaniciId; }
+    public void setKullaniciId(Integer kullaniciId) { this.kullaniciId = kullaniciId; }
 
     public String getAd() { return ad; }
     public void setAd(String ad) { this.ad = ad; }
@@ -38,6 +57,9 @@ public class Kullanici {
     public String getTelefon() { return telefon; }
     public void setTelefon(String telefon) { this.telefon = telefon; }
 
+    public String getFirma() { return firma; }
+    public void setFirma(String firma) { this.firma = firma; }
+
     public String getRol() { return rol; }
     public void setRol(String rol) { this.rol = rol; }
 
@@ -52,4 +74,12 @@ public class Kullanici {
 
     public Timestamp getOlusturmaTarihi() { return olusturmaTarihi; }
     public void setOlusturmaTarihi(Timestamp olusturmaTarihi) { this.olusturmaTarihi = olusturmaTarihi; }
+
+    public LocalDateTime getGuncellemeTarihi() { return guncellemeTarihi; }
+    public void setGuncellemeTarihi(LocalDateTime guncellemeTarihi) { this.guncellemeTarihi = guncellemeTarihi; }
+
+    @Override
+    public String toString() {
+        return ad + " " + soyad + " (" + email + ")";
+    }
 }

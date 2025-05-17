@@ -3,18 +3,16 @@ package aracyonetim.util;
 import aracyonetim.model.Kullanici;
 
 /**
- * SessionManager is a singleton class that manages the current user session
- * It allows controllers to store and retrieve information about the currently logged-in user
+ * Singleton class to manage user sessions
  */
 public class SessionManager {
     private static SessionManager instance;
     private Kullanici currentUser;
 
-    // Private constructor for singleton pattern
     private SessionManager() {
+        // Private constructor to enforce singleton pattern
     }
 
-    // Get the single instance of SessionManager
     public static synchronized SessionManager getInstance() {
         if (instance == null) {
             instance = new SessionManager();
@@ -22,23 +20,23 @@ public class SessionManager {
         return instance;
     }
 
-    // Set the current logged-in user
-    public void setCurrentUser(Kullanici user) {
-        this.currentUser = user;
-    }
-
-    // Get the current logged-in user
     public Kullanici getCurrentUser() {
         return currentUser;
     }
 
-    // Check if a user is logged in
-    public boolean isUserLoggedIn() {
+    public void setCurrentUser(Kullanici currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public void clearSession() {
+        this.currentUser = null;
+    }
+
+    public boolean isLoggedIn() {
         return currentUser != null;
     }
 
-    // Clear the session (logout)
-    public void clearSession() {
-        currentUser = null;
+    public boolean hasRole(String role) {
+        return isLoggedIn() && currentUser.getRol().equals(role);
     }
 }
