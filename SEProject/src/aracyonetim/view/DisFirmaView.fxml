@@ -75,7 +75,6 @@
                             <HBox spacing="10">
                                 <Button text="Rapor Oluştur" onAction="#raporOlustur" />
                                 <Button text="PDF'e Aktar" onAction="#raporuPDFOlarakAktar" />
-                                <Button text="Excel'e Aktar" onAction="#raporuExcelOlarakAktar" />
                                 <Button text="CSV'ye Aktar" onAction="#raporuCSVOlarakAktar" />
                                 <Button text="Maliyet Tahmini" onAction="#maliyetTahminiHesapla" />
                             </HBox>

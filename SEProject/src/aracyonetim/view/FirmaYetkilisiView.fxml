@@ -145,7 +145,6 @@
                             
                             <HBox spacing="10">
                                 <Button text="PDF'e Aktar" onAction="#raporuPDFOlarakAktar" styleClass="button-secondary" />
-                                <Button text="Excel'e Aktar" onAction="#raporuExcelOlarakAktar" styleClass="button-accent" />
                                 <Button text="CSV'ye Aktar" onAction="#raporuCSVOlarakAktar" styleClass="button-outlined" />
                             </HBox>
                             

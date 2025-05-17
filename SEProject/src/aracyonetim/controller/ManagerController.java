@@ -63,6 +63,14 @@ public class ManagerController {
     @FXML private RadioButton herIkisiRadioButton;
     @FXML private CheckBox tarihFiltreCheckBox;
     @FXML private TableView<HarcamaKalemi> raporTableView;
+    
+    // Report table columns
+    @FXML private TableColumn<HarcamaKalemi, LocalDate> tarihColumn;
+    @FXML private TableColumn<HarcamaKalemi, String> plakaRaporColumn;
+    @FXML private TableColumn<HarcamaKalemi, String> harcamaTipiColumn;
+    @FXML private TableColumn<HarcamaKalemi, BigDecimal> tutarColumn;
+    @FXML private TableColumn<HarcamaKalemi, String> aciklamaColumn;
+    
     @FXML private PieChart harcamaPieChart;
     @FXML private BarChart<String, Number> harcamaBarChart;
     @FXML private TabPane raporGoruntulemeTabs;
@@ -188,20 +196,31 @@ public class ManagerController {
                 rapor = harcamaDAO.raporOlusturTumZamanlar(raporTipi, aracId);
             }
             
-            // Update table
-            raporTableView.getItems().clear();
-            raporTableView.getItems().addAll(rapor.getHarcamaKalemleri());
+            // Make sure report columns are properly set up
+            setupReportColumns();
+            
+            // Update table - clear and add items
+            if (raporTableView != null) {
+                raporTableView.getItems().clear();
+                raporTableView.getItems().addAll(rapor.getHarcamaKalemleri());
+                
+                // Refresh the table to ensure data is displayed
+                raporTableView.refresh();
+            }
+            
+            // Update charts regardless of view selection
+            updateCharts(rapor);
             
             // Show appropriate tab based on selected format
-            if (tabloRadioButton.isSelected()) {
-                raporGoruntulemeTabs.getSelectionModel().select(0);  // Tablo
-            } else if (grafikRadioButton.isSelected()) {
-                raporGoruntulemeTabs.getSelectionModel().select(1);  // Grafik
-                updateCharts(rapor);
-            } else {
-                // Both selected, default to table
-                raporGoruntulemeTabs.getSelectionModel().select(0);
-                updateCharts(rapor);
+            if (raporGoruntulemeTabs != null) {
+                if (tabloRadioButton != null && tabloRadioButton.isSelected()) {
+                    raporGoruntulemeTabs.getSelectionModel().select(0);  // Tablo
+                } else if (grafikRadioButton != null && grafikRadioButton.isSelected()) {
+                    raporGoruntulemeTabs.getSelectionModel().select(1);  // Grafik
+                } else {
+                    // Both selected or default, show the table first
+                    raporGoruntulemeTabs.getSelectionModel().select(0);
+                }
             }
             
             showAlert("Rapor başarıyla oluşturuldu.");
@@ -271,12 +290,55 @@ public class ManagerController {
     }
 
     private void setupTableColumns() {
+        // Setup vehicles table columns
         plakaColumn.setCellValueFactory(new PropertyValueFactory<>("plaka"));
         markaColumn.setCellValueFactory(new PropertyValueFactory<>("marka"));
         modelColumn.setCellValueFactory(new PropertyValueFactory<>("model"));
         yilColumn.setCellValueFactory(new PropertyValueFactory<>("yil"));
         kmColumn.setCellValueFactory(new PropertyValueFactory<>("km"));
         kiralikColumn.setCellValueFactory(new PropertyValueFactory<>("kiralik"));
+        
+        // Setup report table columns - both @FXML injected ones and potential columns from table
+        setupReportColumns();
+    }
+    
+    private void setupReportColumns() {
+        try {
+            if (raporTableView == null) {
+                System.err.println("Report table view is null");
+                return;
+            }
+            
+            // Check if we have direct references to columns through FXML injection
+            if (tarihColumn != null && plakaRaporColumn != null && harcamaTipiColumn != null && 
+                tutarColumn != null && aciklamaColumn != null) {
+                // Set cell factories for FXML injected columns
+                tarihColumn.setCellValueFactory(new PropertyValueFactory<>("tarih"));
+                plakaRaporColumn.setCellValueFactory(new PropertyValueFactory<>("plaka"));
+                harcamaTipiColumn.setCellValueFactory(new PropertyValueFactory<>("harcamaTipi"));
+                tutarColumn.setCellValueFactory(new PropertyValueFactory<>("tutar"));
+                aciklamaColumn.setCellValueFactory(new PropertyValueFactory<>("aciklama"));
+            } else if (!raporTableView.getColumns().isEmpty()) {
+                // Fallback to getting columns from the table directly
+                // This handles cases where the FXML ID doesn't match our field names
+                TableColumn<HarcamaKalemi, ?> tarihCol = raporTableView.getColumns().get(0);
+                TableColumn<HarcamaKalemi, ?> plakaCol = raporTableView.getColumns().get(1);
+                TableColumn<HarcamaKalemi, ?> tipCol = raporTableView.getColumns().get(2);
+                TableColumn<HarcamaKalemi, ?> tutarCol = raporTableView.getColumns().get(3);
+                TableColumn<HarcamaKalemi, ?> aciklamaCol = raporTableView.getColumns().get(4);
+                
+                tarihCol.setCellValueFactory(new PropertyValueFactory<>("tarih"));
+                plakaCol.setCellValueFactory(new PropertyValueFactory<>("plaka"));
+                tipCol.setCellValueFactory(new PropertyValueFactory<>("harcamaTipi"));
+                tutarCol.setCellValueFactory(new PropertyValueFactory<>("tutar"));
+                aciklamaCol.setCellValueFactory(new PropertyValueFactory<>("aciklama"));
+            } else {
+                System.err.println("Report table has no columns");
+            }
+        } catch (Exception e) {
+            System.err.println("Error setting up report columns: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void araclariYukle() {
@@ -416,7 +478,7 @@ public class ManagerController {
 
             // Export to Excel
             RaporUtil.raporuExcelOlarakKaydet(rapor, "rapor.xlsx");
-            showAlert("Excel raporu başarıyla oluşturuldu: rapor.xlsx");
+            showSuccessAlert("Excel Raporu İndirildi", "Excel raporu başarıyla oluşturuldu ve indirildi.\nDosya adı: rapor.xlsx");
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Excel raporu oluşturulurken hata oluştu: " + e.getMessage());
@@ -440,7 +502,7 @@ public class ManagerController {
 
             // Export to CSV
             RaporUtil.raporuCSVOlarakKaydet(rapor, "rapor.csv");
-            showAlert("CSV raporu başarıyla oluşturuldu: rapor.csv");
+            showSuccessAlert("CSV Raporu İndirildi", "CSV raporu başarıyla oluşturuldu ve indirildi.\nDosya adı: rapor.csv");
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("CSV raporu oluşturulurken hata oluştu: " + e.getMessage());
@@ -670,5 +732,14 @@ public class ManagerController {
             e.printStackTrace();
             showAlert("Maliyet tahmini bileşenleri yüklenirken hata oluştu: " + e.getMessage());
         }
+    }
+
+    private void showSuccessAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.getDialogPane().setPrefSize(400, 200);
+        alert.showAndWait();
     }
 }

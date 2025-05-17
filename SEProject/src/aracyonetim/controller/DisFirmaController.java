@@ -336,12 +336,14 @@ public class DisFirmaController {
                     dosyaAdi += ".xlsx";
                     RaporUtil.raporuExcelOlarakKaydet(rapor, dosyaAdi);
                     mesaj = "Excel raporu başarıyla oluşturuldu: " + dosyaAdi;
-                    break;
+                    showSuccessAlert("Excel Raporu İndirildi", "Excel raporu başarıyla oluşturuldu ve indirildi.\nDosya adı: " + dosyaAdi);
+                    return;
                 case "csv":
                     dosyaAdi += ".csv";
                     RaporUtil.raporuCSVOlarakKaydet(rapor, dosyaAdi);
                     mesaj = "CSV raporu başarıyla oluşturuldu: " + dosyaAdi;
-                    break;
+                    showSuccessAlert("CSV Raporu İndirildi", "CSV raporu başarıyla oluşturuldu ve indirildi.\nDosya adı: " + dosyaAdi);
+                    return;
             }
             
             showAlert(mesaj);
@@ -349,6 +351,15 @@ public class DisFirmaController {
             e.printStackTrace();
             showAlert("Rapor oluşturulurken hata oluştu: " + e.getMessage());
         }
+    }
+    
+    private void showSuccessAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.getDialogPane().setPrefSize(400, 200);
+        alert.showAndWait();
     }
     
     @FXML
