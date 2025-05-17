@@ -91,6 +91,19 @@ public class ManagerController {
     @FXML
     private void kullaniciAta(){
         System.out.println("***");
+        // if araç has a çalışan
+        //print "bu araç zaten kullanılıyor
+        //else
+        //update database
+        Arac seciliArac = aracTableView.getSelectionModel().getSelectedItem();
+        Kullanici seciliKullanici = kullaniciListView.getSelectionModel().getSelectedItem();
+
+        if(seciliKullanici == null || seciliArac == null){
+            aracBilgisi.setText("Lütfen bir araç ve çalışan seçiniz. ");
+        }
+        else{
+            
+        }
     }
 
     @FXML
