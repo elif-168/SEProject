@@ -8,7 +8,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.sql.Date;  
+import java.time.Instant;
+import java.time.ZoneId;
 /**
  * Arac tablosu için veritabanı erişim ve işlemlerini yöneten DAO sınıfı
  */
@@ -312,6 +314,9 @@ public class AracDAO {
      * @return Arac nesnesi
      * @throws SQLException Veritabanı hatası durumunda
      */
+
+
+    /*
     private Arac resultSetToArac(ResultSet rs) throws SQLException {
         Arac arac = new Arac();
 
@@ -343,5 +348,50 @@ public class AracDAO {
         }
 
         return arac;
+    }*/
+
+    private Arac resultSetToArac(ResultSet rs) throws SQLException {
+        Arac arac = new Arac();
+    
+        arac.setAracId(rs.getInt("aracId"));
+        arac.setPlaka(rs.getString("plaka"));
+        arac.setMarka(rs.getString("marka"));
+        arac.setModel(rs.getString("model"));
+        arac.setYil(rs.getInt("yil"));
+        arac.setKm(rs.getInt("km"));
+        arac.setKiralik(rs.getBoolean("kiralik"));
+        arac.setFirma(rs.getString("firma"));
+    
+        // === read kiraBaslangicTarihi as epoch-millis and convert ===
+        long startMillis = rs.getLong("kiraBaslangicTarihi");
+        if (!rs.wasNull()) {
+            LocalDate startDate = Instant
+                .ofEpochMilli(startMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+            arac.setKiraBaslangicTarihi(startDate);
+        }
+    
+        // === same for kiraBitisTarihi ===
+        long endMillis = rs.getLong("kiraBitisTarihi");
+        if (!rs.wasNull()) {
+            LocalDate endDate = Instant
+                .ofEpochMilli(endMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+            arac.setKiraBitisTarihi(endDate);
+        }
+    
+        arac.setAylikKiraBedeli(rs.getBigDecimal("aylikKiraBedeli"));
+        arac.setAktif(rs.getBoolean("aktif"));
+    
+        // you can keep this as-is
+        Timestamp olusturmaTs = rs.getTimestamp("olusturmaTarihi");
+        if (olusturmaTs != null) {
+            arac.setOlusturmaTarihi(olusturmaTs.toLocalDateTime());
+        }
+    
+        return arac;
     }
 }
+
