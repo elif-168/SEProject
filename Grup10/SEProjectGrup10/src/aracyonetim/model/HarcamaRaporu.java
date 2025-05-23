@@ -1,5 +1,6 @@
 package aracyonetim.model;
 
+import aracyonetim.test.TestHarcamaRaporu;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class HarcamaRaporu {
         this.harcamaKalemleri = new ArrayList<>();
         this.kategoriTutarMapi = new HashMap<>();
         this.toplamTutar = BigDecimal.ZERO;
+        TestHarcamaRaporu.testHarcamaRaporuOlustur();
     }
     
     /**
@@ -101,7 +103,6 @@ public class HarcamaRaporu {
                 kategoriTutarMapi.get(kalem.getHarcamaTipi()).add(kalem.getTutar())
             );
         }
-
     }
 
     public BigDecimal getToplamTutar() {

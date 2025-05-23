@@ -1,5 +1,6 @@
 package aracyonetim.model;
 
+import aracyonetim.test.TestArac;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class Arac {
     public Arac() {
         this.aktif = true;
         this.olusturmaTarihi = LocalDateTime.now();
+        TestArac.testAracOlustur();
     }
 
     // Parameterized constructor

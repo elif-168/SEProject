@@ -15,15 +15,6 @@ CREATE TABLE IF NOT EXISTS Arac (
     guncellemeTarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Add firma column if it doesn't exist
-ALTER TABLE Arac ADD COLUMN firma TEXT;
-
--- Update existing records with default company
-UPDATE Arac SET firma = 'Araç Filo A.Ş.' WHERE firma IS NULL;
-
--- Make firma column NOT NULL after updating existing records
-ALTER TABLE Arac MODIFY COLUMN firma TEXT NOT NULL;
-
 -- Kullanıcı tablosu - expanded to match model
 CREATE TABLE IF NOT EXISTS Kullanici (
     kullaniciId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,10 +93,10 @@ INSERT INTO Kullanici (ad, soyad, email, telefon, firma, rol, sifre) VALUES
 ('Admin', 'User', 'admin@example.com', '5551234567', 'Araç Filo A.Ş.', 'FIRMA_YETKILISI', 'admin'),
 ('External', 'Company', 'external@example.com', '5551234567', 'Servis Company', 'DIS_FIRMA_YETKILISI', '123456');
 
-INSERT INTO Arac (plaka, marka, model, yil, km, firma) VALUES
-('34ABC123', 'Toyota', 'Corolla', 2020, 50000, 'Araç Filo A.Ş.'),
-('34DEF456', 'Honda', 'Civic', 2021, 35000, 'Araç Filo A.Ş.'),
-('34GHI789', 'Ford', 'Focus', 2019, 75000, 'Servis Company');
+INSERT INTO Arac (plaka, marka, model, yil, km) VALUES
+('34ABC123', 'Toyota', 'Corolla', 2020, 50000),
+('34DEF456', 'Honda', 'Civic', 2021, 35000),
+('34GHI789', 'Ford', 'Focus', 2019, 75000);
 
 -- Örnek Harcama kaydı ekleme
 INSERT INTO HarcamaKalemi (aracId, tarih, harcamaTipi, tutar, aciklama) VALUES
